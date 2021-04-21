@@ -1,49 +1,77 @@
 package com.luis.curso.retrofit.ockham.cursoretrofit;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.luis.curso.retrofit.ockham.cursoretrofit.adapter.FragmentViewPagerAdapter;
+import com.luis.curso.retrofit.ockham.cursoretrofit.fragments.AnimeFragment;
+import com.luis.curso.retrofit.ockham.cursoretrofit.fragments.MangaFragment;
 import com.luis.curso.retrofit.ockham.cursoretrofit.response.ArticleData;
-import com.luis.curso.retrofit.ockham.cursoretrofit.retrofit.ApiClient;
-import com.luis.curso.retrofit.ockham.cursoretrofit.retrofit.ApiService;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
+public class MainActivity extends AppCompatActivity implements TabLayoutMediator.TabConfigurationStrategy, RequestHandler.RequestListener {
 
-public class MainActivity extends AppCompatActivity {
+    private AnimeFragment animeFragment = AnimeFragment.getInstance();
+    private MangaFragment mangaFragment = MangaFragment.getInstance();
+    private List<Fragment> fragmentList = new ArrayList<>();
 
-    private ApiClient apiClient = ApiClient.getInstance();
-    private ApiService apiService = apiClient.getApiService();
+    private RequestHandler requestHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Call<ArticleData> call = apiService.getAnimeArticle();
-        call.enqueue(new Callback<ArticleData>() {
-            @Override
-            public void onResponse(Call<ArticleData> call, Response<ArticleData> response) {
-                if (response.isSuccessful() && response.code()==200){
-                    for (int x = 0; x<response.body().getData().size();x++) {
-                        Log.e("retrofitResponse", response.body().getData().get(x).getId());
-                    }
-                }else {
-                    Log.e("retrofitResponse", response.errorBody().toString());
-                }
+        ViewPager2 articlesViewPager = findViewById(R.id.articles_viewpager);
+        TabLayout tabs = findViewById(R.id.tab_layout);
+
+        fragmentList.add(animeFragment);
+        fragmentList.add(mangaFragment);
+
+        FragmentViewPagerAdapter fragmentViewPagerAdapter = new FragmentViewPagerAdapter(fragmentList,this);
+
+        articlesViewPager.setAdapter(fragmentViewPagerAdapter);
+
+        new TabLayoutMediator(tabs,articlesViewPager,this).attach();
+
+        requestHandler = new RequestHandler(this, this);
+
+        requestHandler.getArticles(StringUtils.ARTICLES.MANGA);
+
+    }
+
+    @Override
+    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+
+        switch (position){
+
+            case 0:{
+                tab.setText("Anime");
+                break;
+            }
+            case 1:{
+                tab.setText("Manga");
+                break;
             }
 
-            @Override
-            public void onFailure(Call<ArticleData> call, Throwable t) {
-                Log.e("retrofitResponse", t.getMessage());
-            }
-        });
+        }
 
+    }
+
+    @Override
+    public void articlesResponse(ArticleData articleData) {
+        for (int x= 0; x<articleData.getData().size();x++) {
+            Log.e("ResponseActivity", articleData.getData().get(x).getId());
+        }
     }
 }
