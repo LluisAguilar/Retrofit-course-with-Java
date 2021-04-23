@@ -9,9 +9,9 @@ import retrofit2.http.GET;
 
 public interface ApiService {
 
-    @GET("anime?")
+    @GET("anime?page[limit]=20&page[offset]=0")
     Call<ArticleData> getAnimeArticle();
 
-    @GET("manga?")
+    @GET("manga?page[limit]=20&page[offset]=0")
     Call<ArticleData> getMangaArticle();
 }

@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
 
         requestHandler = new RequestHandler(this, this);
 
-        requestHandler.getArticles(StringUtils.ARTICLES.MANGA);
+        requestHandler.getArticles(StringUtils.ARTICLES.ANIME);
 
     }
 
@@ -69,9 +69,16 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
     }
 
     @Override
-    public void articlesResponse(ArticleData articleData) {
-        for (int x= 0; x<articleData.getData().size();x++) {
-            Log.e("ResponseActivity", articleData.getData().get(x).getId());
-        }
+    public void animeResponse(ArticleData articleData) {
+        animeFragment.initializeAnimeData(articleData);
+    }
+
+    public void callMangaData(){
+        requestHandler.getArticles(StringUtils.ARTICLES.MANGA);
+    }
+
+    @Override
+    public void mangaResponse(ArticleData articleData) {
+        mangaFragment.initializeMangaData(articleData);
     }
 }

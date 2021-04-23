@@ -35,7 +35,12 @@ public class RequestHandler {
             @Override
             public void onResponse(Call<ArticleData> call, Response<ArticleData> response) {
                 if (response.isSuccessful() && response.code() == 200) {
-                    requestListener.articlesResponse(response.body());
+
+                    if (articlesType == StringUtils.ARTICLES.ANIME) {
+                        requestListener.animeResponse(response.body());
+                    } else if (articlesType == StringUtils.ARTICLES.MANGA){
+                        requestListener.mangaResponse(response.body());
+                    }
                 } else {
                     Log.e("retrofitResponse", response.errorBody().toString());
                 }
@@ -49,6 +54,7 @@ public class RequestHandler {
     }
 
     public interface RequestListener{
-        void articlesResponse(ArticleData articleData);
+        void animeResponse(ArticleData articleData);
+        void mangaResponse(ArticleData articleData);
     }
 }
