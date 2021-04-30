@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.luis.curso.retrofit.ockham.cursoretrofit.AlertHandler;
+import com.luis.curso.retrofit.ockham.cursoretrofit.MethodUtils;
 import com.luis.curso.retrofit.ockham.cursoretrofit.R;
 import com.luis.curso.retrofit.ockham.cursoretrofit.response.ArticleData;
 import com.luis.curso.retrofit.ockham.cursoretrofit.response.Titles;
@@ -21,10 +23,12 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
 
     private Context context;
     private ArticleData articleData;
+    private AlertHandler alertHandler;
 
     public ArticleRecyclerViewAdapter(Context context, ArticleData articleData){
         this.context = context;
         this.articleData = articleData;
+        alertHandler = new AlertHandler(context);
     }
 
 
@@ -36,13 +40,13 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
 
     @Override
     public void onBindViewHolder(@NonNull ArticleViewHolder holder, int position) {
-        holder.articleTitle.setText(getTitle(articleData.getData().get(position).getAttributes().getTitles()));
+        holder.articleTitle.setText(MethodUtils.getTitle(articleData.getData().get(position).getAttributes().getTitles()));
         Picasso.get().load(articleData.getData().get(position).getAttributes().getPosterImage().getSmall()).into(holder.articleImage);
 
         holder.articleCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, holder.articleTitle.getText().toString(), Toast.LENGTH_SHORT).show();
+                alertHandler.showArticleDetailAlert(articleData,position);
             }
         });
     }
@@ -50,24 +54,6 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
     @Override
     public int getItemCount() {
         return articleData.getData().size();
-    }
-
-    private String getTitle(Titles titles){
-        String title = "No title found";
-
-        if (titles.getEnUs() != null){
-            title = titles.getEnUs();
-        } else if (titles.getEn() != null){
-            title = titles.getEn();
-        } else if (titles != null){
-            title = titles.getEnJp();
-        }
-
-        if (title.isEmpty()){
-            title = "No title found";
-        }
-
-        return title;
     }
 
     public class ArticleViewHolder extends RecyclerView.ViewHolder{
