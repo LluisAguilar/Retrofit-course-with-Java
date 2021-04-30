@@ -15,7 +15,12 @@ public class MethodUtils {
             title = titles.getEnJp();
         }
 
-        if (title.isEmpty()){
+        try {
+            if (title.isEmpty()) {
+                title = "No title found";
+            }
+        }catch (NullPointerException e){
+            e.printStackTrace();
             title = "No title found";
         }
 

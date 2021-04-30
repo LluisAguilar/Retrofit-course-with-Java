@@ -7,4 +7,7 @@ public class StringUtils {
         MANGA
     }
 
+    public static final String FILTER_ANIME_ARTICLES_URL = "anime?page[limit]=20&page[offset]=0&filter[text]=";
+    public static final String FILTER_MANGA_ARTICLES_URL = "manga?page[limit]=20&page[offset]=0&filter[text]=";
+
 }

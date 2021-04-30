@@ -6,6 +6,11 @@
     android:orientation="vertical"
     tools:context=".fragments.AnimeFragment">
 
+   <androidx.appcompat.widget.SearchView
+       android:id="@+id/anime_search_view"
+       android:layout_width="match_parent"
+       android:layout_height="50dp"
+       />
 
    <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/anime_recycler_view"

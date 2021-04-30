@@ -6,6 +6,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Url;
 
 public interface ApiService {
 
@@ -14,4 +15,10 @@ public interface ApiService {
 
     @GET("manga?page[limit]=20&page[offset]=0")
     Call<ArticleData> getMangaArticle();
+
+    @GET
+    Call<ArticleData> getFilterAnimeArticle(@Url String url);
+
+    @GET
+    Call<ArticleData> getFilterMangaArticle(@Url String url);
 }

@@ -81,4 +81,14 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
     public void mangaResponse(ArticleData articleData) {
         mangaFragment.initializeMangaData(articleData);
     }
+
+    public void animeFilterSearch(StringUtils.ARTICLES articleType,String searchText){
+        requestHandler.getFilteredArticles(articleType, searchText);
+    }
+    public void getAnimeArticles(){
+        requestHandler.getArticles(StringUtils.ARTICLES.ANIME);
+    }
+    public void getMangaArticles(){
+        requestHandler.getArticles(StringUtils.ARTICLES.MANGA);
+    }
 }

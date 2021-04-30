@@ -53,6 +53,35 @@ public class RequestHandler {
         });
     }
 
+    public void getFilteredArticles(StringUtils.ARTICLES articlesType, String searchText){
+        Call<ArticleData> call = apiService.getFilterAnimeArticle(StringUtils.FILTER_ANIME_ARTICLES_URL + searchText);
+        if (articlesType == StringUtils.ARTICLES.ANIME){
+            call = apiService.getFilterAnimeArticle(StringUtils.FILTER_ANIME_ARTICLES_URL + searchText);
+        }else  if (articlesType == StringUtils.ARTICLES.MANGA){
+            call = apiService.getFilterMangaArticle(StringUtils.FILTER_MANGA_ARTICLES_URL + searchText);
+        }
+        call.enqueue(new Callback<ArticleData>() {
+            @Override
+            public void onResponse(Call<ArticleData> call, Response<ArticleData> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+
+                    if (articlesType == StringUtils.ARTICLES.ANIME) {
+                        requestListener.animeResponse(response.body());
+                    } else if (articlesType == StringUtils.ARTICLES.MANGA){
+                        requestListener.mangaResponse(response.body());
+                    }
+                } else {
+                    Log.e("retrofitResponse", response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArticleData> call, Throwable t) {
+                Log.e("retrofitResponse", t.getMessage());
+            }
+        });
+    }
+
     public interface RequestListener{
         void animeResponse(ArticleData articleData);
         void mangaResponse(ArticleData articleData);
